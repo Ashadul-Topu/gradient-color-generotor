@@ -2,6 +2,9 @@
 
 // steps
 
+//Global  variables
+let toastMsg = null
+
 // 1. create onload handler
 window.onload = function() {
     main()
@@ -44,12 +47,55 @@ function main() {
     copy1.addEventListener('click', function(){
         navigator.clipboard.writeText(output1.value)
 
+        // remove existing toast message
+        if(toastMsg !== null){
+            toastMsg.remove();
+        }
+        generateToastMsg(`${output1.value} copied`)
+
     })
     const copy2 = document.getElementById('copy2')
     copy2.addEventListener('click', function(){
         navigator.clipboard.writeText(output2.value)
 
+        // remove existing toast message
+        if(toastMsg !== null){
+            toastMsg.remove();
+        }
+        generateToastMsg(`${output2.value} copied`)
     })
 
 
+    // step 5: active toast message
+    function generateToastMsg(msg){
+        toastMsg = document.createElement('p')
+        
+        // step 6: create dynamic toast message (color code)
+        toastMsg.innerText = msg
+        document.body.appendChild(toastMsg)
+        // toastMsg.classList.add("toast-message") // anther way to add class below
+        toastMsg.className = 'toast-message toast-msg-in'
+        console.log('color copied');
+
+        // remove the toast message when user clicks inside the toast message
+        toastMsg.addEventListener('click', function(){
+            toastMsg.classList.remove('toast-msg-in');
+            toastMsg.classList.add('toast-msg-out');
+
+
+            // step 7: clear toast message
+            // remove toast message permanently when user clicked  it.
+            toastMsg.addEventListener("animationend", function(){
+                toastMsg.remove();
+                toastMsg = null;v // remove previous toast message
+            })
+        });
+
+        setTimeout(() => {
+            document.body.removeChild(toastMsg)
+        }, 4000)
+    }
+
+
 }
+
